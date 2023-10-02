@@ -1,0 +1,9 @@
+.navbar .container a, .navbar .nav .nav-item a {
+    text-decoration: none;
+}
+.example-wrapper .row img {
+    width: 500px;
+}
+.example-wrapper .row p {
+    text-align: justify;
+}

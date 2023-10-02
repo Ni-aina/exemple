@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 1000px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <div class="row">
+        <div class="col-md-6">
+            <img src={{ asset('/images/blog.jpg') }}>
+        </div>
+        <div class="col-md">
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Vitae sapiente, ab provident reprehenderit placeat consequatur qui. 
+                Sequi velit reprehenderit corporis, 
+                aperiam cum voluptatum aut debitis necessitatibus est id, autem aliquid.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, laboriosam! 
+                Minus illum accusamus dolorem nihil! Esse officiis, 
+                voluptatum ea recusandae rerum saepe aperiam nulla eum unde vitae dolorem, eos dolores?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Doloribus beatae consequatur aut unde nisi nostrum perferendis deserunt quia architecto, 
+                amet distinctio consectetur soluta nesciunt tempore eius, sapiente sint molestiae? Qui.
+            </p>
+        </div>
+    </div>
+    {% for comment in comments %}
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <p class="mb-0">
+                    {{ comment.comment }}
+                </p>
+                <span style="font-size: 15px;">
+                    {{ comment.user.email }}
+                </span>
+            </div>
+            <div class="col-md text-end">
+                {{ comment.createdAt|date('m/d/y') }}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="row mt-3">
+        {% if app.user %}
+            {{ form(form) }}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
