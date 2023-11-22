@@ -8,7 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use League\OAuth2\Client\Provider\Google;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Security\AppAuthenticator;
 use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Transport\Smtp\Auth\AuthenticatorInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class GoogleController extends AbstractController
 {
@@ -43,7 +47,12 @@ class GoogleController extends AbstractController
 
 
     #[Route('/ggl-callback', name: 'ggl_callback')]
-    public function gglCallBack(UserRepository $userDb, EntityManagerInterface $manager): Response
+    public function gglCallBack(
+        UserRepository $userDb, 
+        EntityManagerInterface $manager,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        Request $request): Response
     {
         //Récupérer le token
         $token = $this->provider->getAccessToken('authorization_code', [
@@ -63,8 +72,11 @@ class GoogleController extends AbstractController
            
            if($user_exist)
            {
-               dd('Exist Success');
-               return $this->render('google/index.html.twig');
+                return $userAuthenticator->authenticateUser(
+                    $user_exist,
+                    $authenticator,
+                    $request
+                );
             }
             
             else
@@ -76,9 +88,11 @@ class GoogleController extends AbstractController
                 
                 $manager->persist($new_user);
                 $manager->flush();
-                dd('Save Success');
-                return $this->render('google/index.html.twig');
-
+                return $userAuthenticator->authenticateUser(
+                    $new_user,
+                    $authenticator,
+                    $request
+                );
            }
 
 
